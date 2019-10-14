@@ -1,0 +1,13 @@
+Package: paresseux
+Title: Relaunch your app easily
+Version: 0.0.0.9000
+Authors@R: 
+      c(person(given = "Cervan",
+             family = "Girard",
+             role = c("aut","cre"),
+             email = "cervan@thinkr.fr",
+             comment = c(ORCID = "0000-0002-4816-4624")))
+Description: The objective is to make as little effort as possible to restart the application.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
