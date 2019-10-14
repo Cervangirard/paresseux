@@ -3,20 +3,20 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    # List the first level UI elements here 
+    # List the first level UI elements here
     fluidPage(
       h1("showsloth")
     )
   )
 }
- 
+
 #' @import shiny
 golem_add_external_resources <- function(){
-  
+
   addResourcePath(
     'www', system.file('app/www', package = 'showsloth')
   )
- 
+
   tags$head(
     golem::activate_js(),
     golem::favicon(),

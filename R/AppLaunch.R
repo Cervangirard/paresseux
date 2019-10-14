@@ -17,8 +17,10 @@
 #'  }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom golem get_golem_wd
-#' @importFrom servr httw
+#' @importFrom rlang is_empty
+#' @importFrom golem set_golem_wd document_and_reload
+#' @importFrom servr httw daemon_stop
+#' @importFrom withr with_dir
 #' @export
 
 AppLaunch <- R6Class(
@@ -26,34 +28,36 @@ AppLaunch <- R6Class(
   public = list(
     process = character(0),
     dir_of_app = character(0),
+    path_to_run_dev = character(0),
     url = character(0),
-    initialize = function(
-      is_golem = TRUE,
-      path_to_run_dev = NULL,
-      app_dir = NULL) {
+    initialize = function(is_golem = TRUE,
+                              app_dir = ".") {
       if (is_golem) {
-        path <- get_golem_wd()
+        path <- set_golem_wd(app_dir, talkative = FALSE)
         self$dir_of_app <- path
         dev <- file.path(path, "dev")
         list_run_dev <- list.files(dev, pattern = "run_dev")
-        choice <- menu(list_run_dev, title = "Choose you run_dev:")
-        self$path_to_run_dev <- file.path(dev, list_run_dev[choice])
-
+        if (is_empty(self$path_to_run_dev)) {
+          choice <- menu(list_run_dev, title = "Choose you run_dev:")
+          self$path_to_run_dev <- file.path(dev, list_run_dev[choice])
+        }
         if (file.exists(self$path_to_run_dev)) {
-          command <- paste0("Rscript '", self$path_to_run_dev, "'")
-          self$process <- rstudioapi::terminalExecute(
-            command,
-            show = FALSE
-          )
+
+          with_dir(self$dir_of_app, {
+            command <- paste0("Rscript '", self$path_to_run_dev, "'")
+            self$process <- rstudioapi::terminalExecute(
+              command,
+              show = FALSE
+            )
+          })
         } else {
           stop("We don't find this run_dev")
         }
-
       } else {
         message("
                 It'better is you use golem package for your app")
         self$dir_of_app <- app_dir
-        command <- paste0("shiny::shinyAppDir(\"", app_dir,"\")")
+        command <- paste0("shiny::shinyAppDir(\"", app_dir, "\")")
         self$process <- rstudioapi::terminalExecute(
           command,
           show = FALSE
@@ -100,12 +104,23 @@ AppLaunch <- R6Class(
         self$process
       )
     },
-    auto_restart = function(){
-      httw(dir = self$dir_of_app,
-                  watch = self$dir_of_app,
-                  handler = function(...){
-        self$restart()
-      })
+    auto_restart = function() {
+      private$server_restart <- httw(
+        dir = self$dir_of_app,
+        watch = self$dir_of_app,
+        handler = function(...) {
+          self$restart()
+        }
+      )
+    },
+    stop_restart = function() {
+      self$stop()
+      private$server_restart$stop_server()
+      daemon_stop()
     }
+  ),
+  private = list(
+    server_restart = list(),
+    first = TRUE
   )
 )

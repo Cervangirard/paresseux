@@ -17,37 +17,42 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of paresseux is to ...
+The goal of paresseux is to launcn app easily
 
 ## Installation
 
 You can install the released version of paresseux from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("paresseux")
+remotes::install_github("thinkr-open/paresseux")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to use this package with app initialized with golem
 
 ```{r example}
 library(paresseux)
-## basic example code
+path_golem_app <- system.file("app_with_golem/showsloth", package = "paresseux")
+
+my_app <- AppLaunch$new(is_golem = TRUE, app_dir = path_golem_app)  
+
+my_app$open_app()
+my_app$stop()
+my_app$auto_restart()
+
+
+### made modification inside your app folder
+
+test <- file.path(path_golem_app,"test")
+if(file.exists(test)){
+  file.remove(test)
+}else{
+  file.create(test)
+}
+
+### stop autorestart
+
+my_app$stop_restart()
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
