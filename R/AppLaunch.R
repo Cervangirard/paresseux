@@ -66,7 +66,7 @@ AppLaunch <- R6Class(
 
       message("
               Waiting to launch the app")
-      Sys.sleep(4)
+      Sys.sleep(6)
 
       self$url <- self$get_url()
     },
