@@ -1,28 +1,18 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  eval = FALSE,
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
 # paresseux
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of paresseux is to launcn app easily
 
 ## Installation
 
-You can install the released version of paresseux from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of paresseux from
+[CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 remotes::install_github("thinkr-open/paresseux")
@@ -30,9 +20,10 @@ remotes::install_github("thinkr-open/paresseux")
 
 ## Example
 
-This is a basic example which shows you how to use this package with app initialized with golem
+This is a basic example which shows you how to use this package with app
+initialized with golem
 
-```{r example}
+``` r
 library(paresseux)
 path_golem_app <- system.file("app_with_golem/showsloth", package = "paresseux")
 
@@ -56,4 +47,3 @@ if(file.exists(test)){
 
 my_app$stop_restart()
 ```
-
